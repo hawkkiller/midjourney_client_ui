@@ -32,8 +32,6 @@ dependencies:
 
   # Network
   http: 0.13.6
-  rest_client:
-    path: packages/rest_client
 
   # Router
   auto_route: 7.4.0
