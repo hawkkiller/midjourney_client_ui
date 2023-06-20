@@ -15,6 +15,7 @@ class SampleScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(context.stringOf().appTitle),
         ),
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Column(
           children: [
             Text(

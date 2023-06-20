@@ -97,7 +97,6 @@ mixin Logger {
       _formatError('PlatformDispatcher', exception.toString(), stackTrace),
       stackTrace,
     );
-    // TODO(mlazebny): check this later
     return true;
   }
 
