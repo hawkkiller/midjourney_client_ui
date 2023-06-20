@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizzle_starter/src/core/router/router.dart';
+import 'package:midjourney_client_ui/src/core/router/router.dart';
 
 /// Dependencies container
 abstract interface class Dependencies {

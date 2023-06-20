@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sizzle_starter/src/core/utils/mixin/scope_mixin.dart';
-import 'package:sizzle_starter/src/core/widget/scope_widgets.dart';
+import 'package:midjourney_client_ui/src/core/utils/mixin/scope_mixin.dart';
+import 'package:midjourney_client_ui/src/core/widget/scope_widgets.dart';
 
 void main() {
   group('ScopeProvider test >', () {

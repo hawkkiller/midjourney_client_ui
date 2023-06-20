@@ -217,7 +217,7 @@ Hydrated Bloc is a library that allows you to persist bloc state. It is a bad id
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=hawkkiller/sizzle_starter&type=Date)](https://star-history.com/#hawkkiller/sizzle_starter&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=hawkkiller/midjourney_client_ui&type=Date)](https://star-history.com/#hawkkiller/midjourney_client_ui&Date)
 
 ## Credits
 

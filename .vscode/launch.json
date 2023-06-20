@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "sizzle_starter",
+      "name": "midjourney_client_ui",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "sizzle_starter (profile mode)",
+      "name": "midjourney_client_ui (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "sizzle_starter (release mode)",
+      "name": "midjourney_client_ui (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sizzle_starter/src/core/bloc/observer.dart';
-import 'package:sizzle_starter/src/core/utils/logger.dart';
-import 'package:sizzle_starter/src/feature/app/widget/app.dart';
-import 'package:sizzle_starter/src/feature/initialization/logic/initialization_processor.dart';
-import 'package:sizzle_starter/src/feature/initialization/logic/initialization_steps.dart';
-import 'package:sizzle_starter/src/feature/initialization/model/initialization_hook.dart';
+import 'package:midjourney_client_ui/src/core/bloc/observer.dart';
+import 'package:midjourney_client_ui/src/core/utils/logger.dart';
+import 'package:midjourney_client_ui/src/feature/app/widget/app.dart';
+import 'package:midjourney_client_ui/src/feature/initialization/logic/initialization_processor.dart';
+import 'package:midjourney_client_ui/src/feature/initialization/logic/initialization_steps.dart';
+import 'package:midjourney_client_ui/src/feature/initialization/model/initialization_hook.dart';
 
 /// A class which is responsible for initialization and running the app.
 class AppRunner
