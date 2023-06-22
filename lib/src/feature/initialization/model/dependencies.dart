@@ -1,5 +1,5 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:midjourney_client_ui/src/core/router/router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Dependencies container
 abstract interface class Dependencies {

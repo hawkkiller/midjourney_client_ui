@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:midjourney_client_ui/src/core/router/router.dart';
 import 'package:midjourney_client_ui/src/feature/initialization/model/dependencies.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 typedef StepAction = FutureOr<void>? Function(Dependencies$Mutable progress);
 
