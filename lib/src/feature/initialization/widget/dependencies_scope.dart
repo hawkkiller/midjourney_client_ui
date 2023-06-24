@@ -22,7 +22,7 @@ class DependenciesScope extends InheritedWidget
   final Dependencies dependencies;
 
   /// Get only dependencies from the widget
-  static Dependencies dependenciesOf(BuildContext context) =>
+  static Dependencies of(BuildContext context) =>
       _maybeOf(context)?.dependencies ??
       ScopeMixin.notFoundInheritedWidgetOfExactType<DependenciesScope>();
 
@@ -34,11 +34,6 @@ class DependenciesScope extends InheritedWidget
         context,
         listen: false,
       );
-
-  /// Get all the initialized dependencies
-  static StoresContainer of(BuildContext context) =>
-      _maybeOf(context) ??
-      ScopeMixin.notFoundInheritedWidgetOfExactType<DependenciesScope>();
 
   @override
   bool updateShouldNotify(DependenciesScope oldWidget) => false;

@@ -7,19 +7,28 @@
     {
       "name": "midjourney_client_ui",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define-from-file=.json"
+      ]
     },
     {
       "name": "midjourney_client_ui (profile mode)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "toolArgs": [
+        "--dart-define-from-file=.json"
+      ]
     },
     {
       "name": "midjourney_client_ui (release mode)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "toolArgs": [
+        "--dart-define-from-file=.json"
+      ]
     }
   ]
 }

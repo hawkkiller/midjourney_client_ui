@@ -1,0 +1,6 @@
+-- SQLITE
+CREATE TABLE message_tbl (
+    id TEXT PRIMARY KEY NOT NULL,
+    title TEXT,
+    uri TEXT
+);

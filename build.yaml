@@ -18,6 +18,10 @@ targets:
           generic_argument_factories: false
           ignore_unannotated: false
           include_if_null: true
+      drift_dev:
+        enabled: true
+        generate_for:
+          - lib/**.dart
 builders:
   json_serializable:
     import: "package:json_serializable/builder.dart"

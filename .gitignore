@@ -137,3 +137,4 @@ lib/src/core/assets/generated/
 
 pubspec.lock
 .metadata
+.json
