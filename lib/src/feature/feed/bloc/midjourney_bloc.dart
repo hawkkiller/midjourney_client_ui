@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:midjourney_client_ui/src/feature/feed/data/midjourney_repository.dart';
+import 'package:midjourney_client_ui/src/feature/feed/model/message_model.dart';
 
 @immutable
 sealed class MidjourneyState {
@@ -67,6 +68,16 @@ sealed class MidjourneyEvent {
     String prompt,
   ) = MidjourneyEvent$Imagine;
 
+  const factory MidjourneyEvent.variations(
+    ImageMessage image,
+    int index,
+  ) = MidjourneyEvent$Variations;
+
+  const factory MidjourneyEvent.upscale(
+    ImageMessage image,
+    int index,
+  ) = MidjourneyEvent$Upscale;
+
   @override
   String toString() => runtimeType.toString();
 }
@@ -90,7 +101,7 @@ final class MidjourneyEvent$Imagine extends MidjourneyEvent {
 final class MidjourneyEvent$Variations extends MidjourneyEvent {
   const MidjourneyEvent$Variations(this.image, this.index);
 
-  final String image;
+  final ImageMessage image;
   final int index;
 
   @override
@@ -106,9 +117,11 @@ final class MidjourneyEvent$Variations extends MidjourneyEvent {
 }
 
 final class MidjourneyEvent$Upscale extends MidjourneyEvent {
-  const MidjourneyEvent$Upscale(this.image);
+  const MidjourneyEvent$Upscale(this.image, this.index);
 
-  final String image;
+  final ImageMessage image;
+
+  final int index;
 
   @override
   bool operator ==(Object other) =>
@@ -154,7 +167,7 @@ class MidjourneyBloc extends Bloc<MidjourneyEvent, MidjourneyState> {
   ) async {
     emitter(const MidjourneyState$Loading());
     try {
-      await _repository.variations(event.image, event.index);
+      await _repository.variation(event.image, event.index);
       emitter(const MidjourneyState$Success());
     } on Object catch (e) {
       emitter(MidjourneyState$Error(e.toString()));
@@ -168,7 +181,7 @@ class MidjourneyBloc extends Bloc<MidjourneyEvent, MidjourneyState> {
   ) async {
     emitter(const MidjourneyState$Loading());
     try {
-      await _repository.upscale(event.image);
+      await _repository.upscale(event.image, event.index);
       emitter(const MidjourneyState$Success());
     } on Object catch (e) {
       emitter(MidjourneyState$Error(e.toString()));

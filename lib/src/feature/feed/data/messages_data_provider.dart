@@ -4,19 +4,20 @@ import 'package:database/database.dart';
 import 'package:drift/drift.dart';
 import 'package:midjourney_client_ui/src/feature/feed/model/message_model.dart';
 
-part 'messages_data_provider.g.dart';
-
 abstract interface class MessagesDataProvider {
   /// Upserts a message
-  Future<void> createOrUpdate(MessageModel message);
+  Future<void> createOrUpdate(ImageMessage message);
 
   /// List of messages
-  abstract final Stream<List<MessageModel>> messages;
+  abstract final Stream<List<ImageMessage>> messages;
+
+  /// Resets the database
+  Future<void> resetDb();
 }
 
 class MessagesDaoDriftImpl implements MessagesDataProvider {
   MessagesDaoDriftImpl(this.db) {
-    _messagesController = StreamController<List<MessageModel>>.broadcast(
+    _messagesController = StreamController<List<ImageMessage>>.broadcast(
       onListen: () async {
         _messagesController.add(await _getCache());
       },
@@ -25,17 +26,20 @@ class MessagesDaoDriftImpl implements MessagesDataProvider {
 
   final AppDatabase db;
 
-  List<MessageModel>? _cache;
+  List<ImageMessage>? _cache;
 
-  late final StreamController<List<MessageModel>> _messagesController;
+  late final StreamController<List<ImageMessage>> _messagesController;
 
-  Future<List<MessageModel>> _getCache() async {
+  Future<List<ImageMessage>> _getCache() async {
     final models = (await db.select(db.messageTbl).get())
         .map(
-          (e) => MessageModel(
+          (e) => ImageMessage(
             id: e.id,
-            title: e.title,
+            messageId: e.id,
+            progress: e.progress,
+            prompt: e.title,
             uri: e.uri,
+            type: ImageMessageType.imagine,
           ),
         )
         .toList();
@@ -43,7 +47,7 @@ class MessagesDaoDriftImpl implements MessagesDataProvider {
     return models;
   }
 
-  Future<void> _addCache(MessageModel model) async {
+  Future<void> _addCache(ImageMessage model) async {
     _cache ??= await _getCache();
     final index = _cache?.indexWhere((element) => element.id == model.id);
     if (index != null && index >= 0) {
@@ -55,11 +59,21 @@ class MessagesDaoDriftImpl implements MessagesDataProvider {
   }
 
   @override
-  Future<void> createOrUpdate(MessageModel message) async {
+  Future<void> resetDb() async {
+    await db.delete(db.messageTbl).go();
+    _cache = null;
+    _messagesController.add([]);
+  }
+
+  @override
+  Future<void> createOrUpdate(ImageMessage message) async {
     await db.into(db.messageTbl).insertOnConflictUpdate(
           MessageTblCompanion.insert(
             id: message.id,
-            title: Value(message.title),
+            messageId: message.id,
+            progress: Value(message.progress),
+            messageType: message.type.value,
+            title: Value(message.prompt),
             uri: Value(message.uri),
           ),
         );
@@ -67,7 +81,7 @@ class MessagesDaoDriftImpl implements MessagesDataProvider {
   }
 
   @override
-  Stream<List<MessageModel>> get messages => _messagesController.stream;
+  Stream<List<ImageMessage>> get messages => _messagesController.stream;
 
   Future<void> close() => _messagesController.close();
 }

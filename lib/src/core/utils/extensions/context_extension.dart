@@ -7,5 +7,7 @@ extension LocalizationX on BuildContext {
   
   ThemeData themeOf() => Theme.of(this);
 
+  TextTheme textThemeOf() => themeOf().textTheme;
+
   ColorScheme schemeOf() => themeOf().colorScheme;
 }

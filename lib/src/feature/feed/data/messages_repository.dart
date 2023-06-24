@@ -4,10 +4,13 @@ import 'package:midjourney_client_ui/src/feature/feed/model/message_model.dart';
 /// Repository for messages
 abstract interface class MessagesRepository {
   /// Upserts a message
-  Future<void> createOrUpdate(MessageModel message);
+  Future<void> createOrUpdate(ImageMessage message);
+
+  /// Resets the database
+  Future<void> resetDb();
 
   /// List of messages
-  abstract final Stream<List<MessageModel>> messages;
+  abstract final Stream<List<ImageMessage>> messages;
 }
 
 final class MessagesRepositoryImpl implements MessagesRepository {
@@ -16,8 +19,12 @@ final class MessagesRepositoryImpl implements MessagesRepository {
   final MessagesDataProvider _messagesDataProvider;
 
   @override
-  Future<void> createOrUpdate(MessageModel message) => _messagesDataProvider.createOrUpdate(message);
+  Future<void> resetDb() => _messagesDataProvider.resetDb();
 
   @override
-  Stream<List<MessageModel>> get messages => _messagesDataProvider.messages;
+  Future<void> createOrUpdate(ImageMessage message) =>
+      _messagesDataProvider.createOrUpdate(message);
+
+  @override
+  Stream<List<ImageMessage>> get messages => _messagesDataProvider.messages;
 }

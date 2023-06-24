@@ -6,6 +6,7 @@
   "configurations": [
     {
       "name": "midjourney_client_ui",
+      "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
       "toolArgs": [
@@ -15,6 +16,7 @@
     {
       "name": "midjourney_client_ui (profile mode)",
       "request": "launch",
+      "program": "lib/main.dart",
       "type": "dart",
       "flutterMode": "profile",
       "toolArgs": [
@@ -24,6 +26,7 @@
     {
       "name": "midjourney_client_ui (release mode)",
       "request": "launch",
+      "program": "lib/main.dart",
       "type": "dart",
       "flutterMode": "release",
       "toolArgs": [

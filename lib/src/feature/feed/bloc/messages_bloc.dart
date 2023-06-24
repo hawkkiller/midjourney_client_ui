@@ -12,7 +12,7 @@ sealed class MessagesState {
   @override
   String toString() => runtimeType.toString();
 
-  abstract final List<MessageModel> messages;
+  abstract final List<ImageMessage> messages;
 }
 
 final class MessagesState$Idle extends MessagesState {
@@ -29,14 +29,14 @@ final class MessagesState$Idle extends MessagesState {
   int get hashCode => 0;
 
   @override
-  List<MessageModel> get messages => const [];
+  List<ImageMessage> get messages => const [];
 }
 
 final class MessagesState$Loaded extends MessagesState {
   const MessagesState$Loaded(this.messages);
 
   @override
-  final List<MessageModel> messages;
+  final List<ImageMessage> messages;
 
   @override
   bool operator ==(Object other) =>

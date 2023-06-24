@@ -67,6 +67,7 @@ dependencies:
   # Local packages
   database:
     path: packages/database
+  extended_image: ^8.0.2
 
 dev_dependencies:
   # Testing
