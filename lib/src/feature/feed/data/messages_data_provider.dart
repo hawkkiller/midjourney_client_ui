@@ -35,11 +35,11 @@ class MessagesDaoDriftImpl implements MessagesDataProvider {
         .map(
           (e) => ImageMessage(
             id: e.id,
-            messageId: e.id,
+            messageId: e.messageId,
             progress: e.progress,
             prompt: e.title,
             uri: e.uri,
-            type: ImageMessageType.imagine,
+            type: ImageMessageType.fromString(e.messageType),
           ),
         )
         .toList();
@@ -70,7 +70,7 @@ class MessagesDaoDriftImpl implements MessagesDataProvider {
     await db.into(db.messageTbl).insertOnConflictUpdate(
           MessageTblCompanion.insert(
             id: message.id,
-            messageId: message.id,
+            messageId: message.messageId,
             progress: Value(message.progress),
             messageType: message.type.value,
             title: Value(message.prompt),

@@ -59,18 +59,22 @@ final class MidjourneyRepositoryImpl implements MidjourneyRepository {
     final stream = _client
         .upscale(_encoder.convert(image), index)
         .map(_upscaleDecoder.convert);
-    final first = await stream.first;
-
-    _controller.add(first);
     StreamSubscription<Object>? subscription;
+    final completer = Completer<void>();
 
     subscription = stream.listen(
-      _controller.add,
+      (e) {
+        _controller.add(e);
+        if (completer.isCompleted) return;
+        completer.complete();
+      },
       onError: (dynamic error) {
         subscription?.cancel();
+        completer.completeError(error as Object);
       },
       onDone: () => subscription?.cancel(),
     );
+    await completer.future;
   }
 
   @override

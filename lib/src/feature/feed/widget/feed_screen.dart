@@ -18,14 +18,12 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  late final TextEditingController _promptController;
   late final MidjourneyBloc _midjourneyBloc;
   late final MessagesBloc _messagesBloc;
 
   @override
   void initState() {
     super.initState();
-    _promptController = TextEditingController();
     _messagesBloc = MessagesBloc(
       messagesRepository: DependenciesScope.of(context).messagesRepository,
       midjourneyRepository: DependenciesScope.of(context).midjourneyRepository,
@@ -37,48 +35,124 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   void dispose() {
-    _promptController.dispose();
     _messagesBloc.close();
     _midjourneyBloc.close();
     super.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    return BlocProvider.value(
+      value: _midjourneyBloc,
+      child: LayoutBuilder(
+        builder: (context, constraints) => Scaffold(
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: const _PromptField(),
+          body: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                title: Text(context.stringOf().appTitle),
+                pinned: true,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () => context.router.push(const SettingsRoute()),
+                  ),
+                ],
+              ),
+              const SliverPadding(
+                padding: EdgeInsets.only(top: 8),
+              ),
+              BlocBuilder<MessagesBloc, MessagesState>(
+                bloc: _messagesBloc,
+                builder: (context, state) {
+                  final messages = state.messages;
+                  if (messages.isEmpty) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Text(context.stringOf().no_messages),
+                      ),
+                    );
+                  }
+                  return SliverPadding(
+                    padding: switch (constraints.biggest.shortestSide) {
+                      > 600 => EdgeInsets.symmetric(
+                          horizontal: (width - width / 1.5) / 2,
+                        ),
+                      _ => const EdgeInsets.symmetric(horizontal: 16),
+                    },
+                    sliver: SliverList.separated(
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 16,
+                      ),
+                      itemBuilder: (context, index) {
+                        final message = messages[index];
+                        return _MessageItem(message);
+                      },
+                      itemCount: messages.length,
+                    ),
+                  );
+                },
+              ),
+              const SliverPadding(
+                padding: EdgeInsets.only(bottom: 100),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PromptField extends StatefulWidget {
+  const _PromptField();
+
+  @override
+  State<_PromptField> createState() => __PromptFieldState();
+}
+
+class __PromptFieldState extends State<_PromptField> {
+  late final TextEditingController _promptController;
+
   void _sendPrompt(String prompt) {
     if (prompt.isEmpty) {
       return;
     }
-    _midjourneyBloc.add(MidjourneyEvent.imagine(prompt));
+    context.read<MidjourneyBloc>().add(MidjourneyEvent.imagine(prompt));
     _promptController.clear();
   }
 
-  void _sendUpscale(ImageMessage message, int index) {
-    _midjourneyBloc.add(MidjourneyEvent.upscale(message, index));
-  }
-
-  void _sendVariation(ImageMessage message, int index) {
-    _midjourneyBloc.add(MidjourneyEvent.variations(message, index));
+  @override
+  void initState() {
+    super.initState();
+    _promptController = TextEditingController();
   }
 
   @override
-  Widget build(BuildContext context) {
-    final shortestSide = MediaQuery.sizeOf(context).shortestSide;
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(
-          left: 32,
-          right: 32,
-          bottom: 16,
-        ),
-        child: SizedBox(
-          width: shortestSide,
+  void dispose() {
+    _promptController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) => Container(
+          color: context.schemeOf().surface,
+          width: double.infinity,
+          padding: switch (constraints.biggest.shortestSide) {
+            > 600 => const EdgeInsets.fromLTRB(32, 0, 32, 16),
+            _ => const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+          },
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: context.schemeOf().shadow.withOpacity(0.12),
-                  blurRadius: 12,
+                  blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
               ],
@@ -86,11 +160,20 @@ class _FeedScreenState extends State<FeedScreen> {
             child: TextField(
               controller: _promptController,
               onSubmitted: _sendPrompt,
-              minLines: 1,
-              maxLines: null,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: context.schemeOf().surface,
+                hintText: context.stringOf().send_prompt,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: .2,
+                    color: context.schemeOf().outline,
+                  ),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 suffixIcon: ValueListenableBuilder<TextEditingValue>(
                   valueListenable: _promptController,
                   builder: (context, value, __) {
@@ -103,121 +186,100 @@ class _FeedScreenState extends State<FeedScreen> {
                     );
                   },
                 ),
-                labelText: context.stringOf().send_prompt,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    width: .2,
-                    color: context.schemeOf().outline,
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
               ),
             ),
           ),
         ),
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Text(context.stringOf().appTitle),
-            pinned: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  context.router.push(const SettingsRoute());
-                },
+      );
+}
+
+class _MessageItem extends StatefulWidget {
+  const _MessageItem(this.message);
+
+  final ImageMessage message;
+
+  @override
+  State<_MessageItem> createState() => _MessageItemState();
+}
+
+class _MessageItemState extends State<_MessageItem> {
+  void _sendUpscale(ImageMessage message, int index) {
+    context.read<MidjourneyBloc>().add(
+          MidjourneyEvent.upscale(message, index),
+        );
+  }
+
+  void _sendVariation(ImageMessage message, int index) {
+    context.read<MidjourneyBloc>().add(
+          MidjourneyEvent.variations(message, index),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) => Padding(
+          padding: switch (constraints.biggest.shortestSide) {
+            > 600 => const EdgeInsets.symmetric(horizontal: 32),
+            _ => EdgeInsets.zero,
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SelectableText(
+                widget.message.prompt ?? 'Empty Title',
+                style: context.textThemeOf().labelMedium,
               ),
-            ],
-          ),
-          const SliverPadding(
-            padding: EdgeInsets.only(top: 8),
-          ),
-          BlocBuilder<MessagesBloc, MessagesState>(
-            bloc: _messagesBloc,
-            builder: (context, state) {
-              final messages = state.messages;
-              if (messages.isEmpty) {
-                return SliverFillRemaining(
-                  child: Center(
-                    child: Text(context.stringOf().no_messages),
-                  ),
-                );
-              }
-              return SliverList.builder(
-                itemBuilder: (context, index) {
-                  final message = messages[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+              if (widget.message.uri != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: ExtendedImage.network(
+                      widget.message.uri!,
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.cover,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SelectableText(
-                            message.prompt ?? 'Empty Title',
-                            style: context.textThemeOf().labelMedium,
-                          ),
-                          if (message.uri != null)
-                            ExtendedImage.network(
-                              message.uri!,
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                            ),
-                          if (message.type.canBeInteracted &&
-                              message.progress == 100) ...[
-                            Row(
-                              children: List.generate(
-                                4,
-                                (index) => TextButton(
-                                  onPressed: () => _sendUpscale(
-                                    message,
-                                    index,
-                                  ),
-                                  child: Text(
-                                    'U${index + 1}',
-                                    style: context.textThemeOf().labelMedium,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Row(
-                              children: List.generate(
-                                4,
-                                (index) => TextButton(
-                                  onPressed: () => _sendVariation(
-                                    message,
-                                    index,
-                                  ),
-                                  child: Text(
-                                    'V${index + 1}',
-                                    style: context.textThemeOf().labelMedium,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
+                  ),
+                ),
+              if (widget.message.type.canBeInteracted &&
+                  widget.message.progress == 100) ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Row(
+                    children: List.generate(
+                      4,
+                      (index) => TextButton(
+                        onPressed: () => _sendUpscale(
+                          widget.message,
+                          index + 1,
+                        ),
+                        child: Text(
+                          'U${index + 1}',
+                          style: context.textThemeOf().labelMedium,
+                        ),
                       ),
                     ),
-                  );
-                },
-                itemCount: messages.length,
-              );
-            },
+                  ),
+                ),
+                Row(
+                  children: List.generate(
+                    4,
+                    (index) => TextButton(
+                      onPressed: () => _sendVariation(
+                        widget.message,
+                        index + 1,
+                      ),
+                      child: Text(
+                        'V${index + 1}',
+                        style: context.textThemeOf().labelMedium,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
-          const SliverPadding(
-            padding: EdgeInsets.only(bottom: 100),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      );
 }
