@@ -22,7 +22,7 @@ enum ImageMessageType {
         ImageMessageType.variation => true,
         ImageMessageType.upscale => false,
       };
-  
+
   @override
   String toString() => value;
 }
@@ -74,6 +74,5 @@ base class ImageMessage {
           prompt == other.prompt;
 
   @override
-  int get hashCode =>
-      Object.hashAll([id, uri, prompt, type, messageId, progress]);
+  int get hashCode => Object.hashAll([id, uri, prompt, type, messageId, progress]);
 }

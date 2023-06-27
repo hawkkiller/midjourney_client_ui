@@ -33,8 +33,7 @@ final class MidjourneyRepositoryImpl implements MidjourneyRepository {
 
   static const _imagineDecoder = ImageMessageDecoder(ImageMessageType.imagine);
   static const _upscaleDecoder = ImageMessageDecoder(ImageMessageType.upscale);
-  static const _variationDecoder =
-      ImageMessageDecoder(ImageMessageType.variation);
+  static const _variationDecoder = ImageMessageDecoder(ImageMessageType.variation);
   static const _encoder = ImageMessageEncoder();
 
   @override
@@ -56,9 +55,7 @@ final class MidjourneyRepositoryImpl implements MidjourneyRepository {
 
   @override
   Future<void> upscale(ImageMessage image, int index) async {
-    final stream = _client
-        .upscale(_encoder.convert(image), index)
-        .map(_upscaleDecoder.convert);
+    final stream = _client.upscale(_encoder.convert(image), index).map(_upscaleDecoder.convert);
     StreamSubscription<Object>? subscription;
     final completer = Completer<void>();
 
@@ -79,9 +76,7 @@ final class MidjourneyRepositoryImpl implements MidjourneyRepository {
 
   @override
   Future<void> variation(ImageMessage image, int index) async {
-    final stream = _client
-        .variation(_encoder.convert(image), index)
-        .map(_variationDecoder.convert);
+    final stream = _client.variation(_encoder.convert(image), index).map(_variationDecoder.convert);
     final first = await stream.first;
 
     _controller.add(first);

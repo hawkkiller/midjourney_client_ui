@@ -23,8 +23,7 @@ class SettingsScope extends StatefulWidget with ScopeMixin {
   State<SettingsScope> createState() => _SettingsScopeState();
 }
 
-class _SettingsScopeState extends State<SettingsScope>
-    implements SettingsController {
+class _SettingsScopeState extends State<SettingsScope> implements SettingsController {
   late final SettingsBloc _settingsBloc;
 
   @override

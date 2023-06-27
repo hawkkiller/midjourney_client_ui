@@ -11,14 +11,14 @@ class SettingsCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CustomPaint(
-    size: const Size.fromHeight(50),
-    painter: _CategoryPainter(
-      lineColor: context.schemeOf().outlineVariant,
-      textColor: context.schemeOf().onBackground,
-      textStyle: context.textThemeOf().labelMedium,
-      category: category,
-    ),
-  );
+        size: const Size.fromHeight(50),
+        painter: _CategoryPainter(
+          lineColor: context.schemeOf().outlineVariant,
+          textColor: context.schemeOf().onBackground,
+          textStyle: context.textThemeOf().labelMedium,
+          category: category,
+        ),
+      );
 }
 
 class _CategoryPainter extends CustomPainter {

@@ -46,7 +46,7 @@ jobs:
       - name: 🔎 Check format
         timeout-minutes: 1
         run: |
-          dart format --set-exit-if-changed $(find lib test -name "*.dart" -not \( -name "*.*.dart" \) )
+          dart format --line-length 100 --set-exit-if-changed $(find lib test -name "*.dart" -not \( -name "*.*.dart" \) )
 
       - name: 📈 Check analyzer
         timeout-minutes: 1

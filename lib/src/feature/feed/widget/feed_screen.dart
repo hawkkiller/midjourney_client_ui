@@ -45,158 +45,88 @@ class _FeedScreenState extends State<FeedScreen> {
     final width = MediaQuery.sizeOf(context).width;
     return BlocProvider.value(
       value: _midjourneyBloc,
-      child: LayoutBuilder(
-        builder: (context, constraints) => Scaffold(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: const _PromptField(),
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                title: Text(context.stringOf().appTitle),
-                pinned: true,
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () => context.router.push(const SettingsRoute()),
-                  ),
-                ],
-              ),
-              const SliverPadding(
-                padding: EdgeInsets.only(top: 8),
-              ),
-              BlocBuilder<MessagesBloc, MessagesState>(
-                bloc: _messagesBloc,
-                builder: (context, state) {
-                  final messages = state.messages;
-                  if (messages.isEmpty) {
-                    return SliverFillRemaining(
-                      child: Center(
-                        child: Text(context.stringOf().no_messages),
-                      ),
-                    );
-                  }
-                  return SliverPadding(
-                    padding: switch (constraints.biggest.shortestSide) {
-                      > 600 => EdgeInsets.symmetric(
-                          horizontal: (width - width / 1.5) / 2,
+      child: Scaffold(
+        body: Column(
+          children: [
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) => CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      title: Text(context.stringOf().appTitle),
+                      pinned: true,
+                      actions: [
+                        IconButton(
+                          icon: const Icon(Icons.settings),
+                          onPressed: () => context.router.push(
+                            const SettingsRoute(),
+                          ),
                         ),
-                      _ => const EdgeInsets.symmetric(horizontal: 16),
-                    },
-                    sliver: SliverList.separated(
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 16,
-                      ),
-                      itemBuilder: (context, index) {
-                        final message = messages[index];
-                        return _MessageItem(message);
-                      },
-                      itemCount: messages.length,
+                      ],
                     ),
-                  );
-                },
+                    const SliverPadding(
+                      padding: EdgeInsets.only(top: 8),
+                    ),
+                    BlocBuilder<MessagesBloc, MessagesState>(
+                      bloc: _messagesBloc,
+                      builder: (context, state) {
+                        final messages = state.messages;
+                        if (messages.isEmpty) {
+                          return SliverFillRemaining(
+                            child: Center(
+                              child: Text(context.stringOf().no_messages),
+                            ),
+                          );
+                        }
+                        return SliverPadding(
+                          padding: switch (constraints.biggest.shortestSide) {
+                            > 600 => EdgeInsets.symmetric(
+                                horizontal: (width - width / 1.5) / 2,
+                              ),
+                            _ => const EdgeInsets.symmetric(horizontal: 16),
+                          },
+                          sliver: SliverList.separated(
+                            separatorBuilder: (context, index) => const SizedBox(
+                              height: 16,
+                            ),
+                            itemBuilder: (context, index) {
+                              final message = messages[index];
+                              return _MessageItem(
+                                message,
+                                BoxConstraints.loose(
+                                  switch (constraints.biggest.shortestSide) {
+                                    > 1000 => const Size.square(500),
+                                    > 600 => const Size.square(300),
+                                    > 400 => const Size.square(200),
+                                    > 200 => const Size.square(150),
+                                    > 100 => const Size.square(100),
+                                    _ => const Size.square(50),
+                                  },
+                                ),
+                              );
+                            },
+                            itemCount: messages.length,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-              const SliverPadding(
-                padding: EdgeInsets.only(bottom: 100),
-              ),
-            ],
-          ),
+            ),
+            const _PromptField(),
+          ],
         ),
       ),
     );
   }
 }
 
-class _PromptField extends StatefulWidget {
-  const _PromptField();
-
-  @override
-  State<_PromptField> createState() => __PromptFieldState();
-}
-
-class __PromptFieldState extends State<_PromptField> {
-  late final TextEditingController _promptController;
-
-  void _sendPrompt(String prompt) {
-    if (prompt.isEmpty) {
-      return;
-    }
-    context.read<MidjourneyBloc>().add(MidjourneyEvent.imagine(prompt));
-    _promptController.clear();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _promptController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _promptController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-        builder: (context, constraints) => Container(
-          color: context.schemeOf().surface,
-          width: double.infinity,
-          padding: switch (constraints.biggest.shortestSide) {
-            > 600 => const EdgeInsets.fromLTRB(32, 0, 32, 16),
-            _ => const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-          },
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: context.schemeOf().shadow.withOpacity(0.12),
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: TextField(
-              controller: _promptController,
-              onSubmitted: _sendPrompt,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: context.schemeOf().surface,
-                hintText: context.stringOf().send_prompt,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    width: .2,
-                    color: context.schemeOf().outline,
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                suffixIcon: ValueListenableBuilder<TextEditingValue>(
-                  valueListenable: _promptController,
-                  builder: (context, value, __) {
-                    final prompt = value.text;
-                    return IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: prompt.isEmpty
-                          ? null
-                          : () => _sendPrompt(_promptController.text),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-}
-
 class _MessageItem extends StatefulWidget {
-  const _MessageItem(this.message);
+  const _MessageItem(this.message, this.constraints);
 
   final ImageMessage message;
+  final BoxConstraints constraints;
 
   @override
   State<_MessageItem> createState() => _MessageItemState();
@@ -236,17 +166,14 @@ class _MessageItemState extends State<_MessageItem> {
                     borderRadius: BorderRadius.circular(8),
                     child: ExtendedImage.network(
                       widget.message.uri!,
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.cover,
+                      constraints: widget.constraints,
                     ),
                   ),
                 ),
-              if (widget.message.type.canBeInteracted &&
-                  widget.message.progress == 100) ...[
+              if (widget.message.type.canBeInteracted && widget.message.progress == 100) ...[
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Row(
+                  child: Wrap(
                     children: List.generate(
                       4,
                       (index) => TextButton(
@@ -262,7 +189,7 @@ class _MessageItemState extends State<_MessageItem> {
                     ),
                   ),
                 ),
-                Row(
+                Wrap(
                   children: List.generate(
                     4,
                     (index) => TextButton(
@@ -279,6 +206,96 @@ class _MessageItemState extends State<_MessageItem> {
                 ),
               ],
             ],
+          ),
+        ),
+      );
+}
+
+class _PromptField extends StatefulWidget {
+  const _PromptField();
+
+  @override
+  State<_PromptField> createState() => __PromptFieldState();
+}
+
+class __PromptFieldState extends State<_PromptField> {
+  late final TextEditingController _promptController;
+
+  void _sendPrompt(String prompt) {
+    if (prompt.isEmpty) {
+      return;
+    }
+    context.read<MidjourneyBloc>().add(MidjourneyEvent.imagine(prompt));
+    _promptController.clear();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _promptController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _promptController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) => DecoratedBox(
+          decoration: BoxDecoration(
+            color: context.schemeOf().surface,
+          ),
+          child: Padding(
+            padding: switch (constraints.biggest.shortestSide) {
+              > 600 => const EdgeInsets.fromLTRB(32, 0, 32, 16),
+              _ => const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+            },
+            child: Center(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: context.schemeOf().shadow.withOpacity(0.12),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: _promptController,
+                  onSubmitted: _sendPrompt,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: context.schemeOf().surface,
+                    hintText: context.stringOf().send_prompt,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        width: .2,
+                        color: context.schemeOf().outline,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    suffixIcon: ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: _promptController,
+                      builder: (context, value, __) {
+                        final prompt = value.text;
+                        return IconButton(
+                          icon: const Icon(Icons.send),
+                          onPressed:
+                              prompt.isEmpty ? null : () => _sendPrompt(_promptController.text),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       );

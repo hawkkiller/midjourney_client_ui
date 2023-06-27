@@ -15,8 +15,7 @@ final class MidjourneyState$Idle extends MidjourneyState {
   const MidjourneyState$Idle();
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is MidjourneyState$Idle;
+  bool operator ==(Object other) => identical(this, other) || other is MidjourneyState$Idle;
 
   @override
   int get hashCode => 0;
@@ -26,8 +25,7 @@ final class MidjourneyState$Loading extends MidjourneyState {
   const MidjourneyState$Loading();
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is MidjourneyState$Loading;
+  bool operator ==(Object other) => identical(this, other) || other is MidjourneyState$Loading;
 
   @override
   int get hashCode => 0;
@@ -53,8 +51,7 @@ final class MidjourneyState$Success extends MidjourneyState {
   const MidjourneyState$Success();
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is MidjourneyState$Success;
+  bool operator ==(Object other) => identical(this, other) || other is MidjourneyState$Success;
 
   @override
   int get hashCode => 0;
@@ -126,9 +123,7 @@ final class MidjourneyEvent$Upscale extends MidjourneyEvent {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MidjourneyEvent$Upscale &&
-          runtimeType == other.runtimeType &&
-          image == other.image;
+      other is MidjourneyEvent$Upscale && runtimeType == other.runtimeType && image == other.image;
 
   @override
   int get hashCode => image.hashCode;

@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:midjourney_client/midjourney_client.dart';
 import 'package:midjourney_client_ui/src/feature/feed/model/message_model.dart';
 
-class ImageMessageDecoder
-    extends Converter<MidjourneyMessage$Image, ImageMessage> {
+class ImageMessageDecoder extends Converter<MidjourneyMessage$Image, ImageMessage> {
   const ImageMessageDecoder(this.type);
 
   final ImageMessageType type;
@@ -20,9 +19,7 @@ class ImageMessageDecoder
       );
 }
 
-class ImageMessageEncoder
-    extends Converter<ImageMessage, MidjourneyMessage$Image> {
-
+class ImageMessageEncoder extends Converter<ImageMessage, MidjourneyMessage$Image> {
   const ImageMessageEncoder();
   @override
   MidjourneyMessage$Image convert(ImageMessage input) {
