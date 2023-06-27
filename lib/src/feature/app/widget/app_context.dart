@@ -9,14 +9,15 @@ class AppContext extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final router = DependenciesScope.dependenciesOf(context).router;
+    final router = DependenciesScope.of(context).router;
     return MaterialApp.router(
       routerConfig: router.config(),
       supportedLocales: AppLocalization.supportedLocales,
       localizationsDelegates: AppLocalization.localizationsDelegates,
       theme: lightThemeData,
       darkTheme: darkThemeData,
-      locale: const Locale('es'),
+      locale: const Locale('en'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

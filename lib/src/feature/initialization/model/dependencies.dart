@@ -1,4 +1,8 @@
+import 'package:database/database.dart';
+import 'package:midjourney_client/midjourney_client.dart';
 import 'package:midjourney_client_ui/src/core/router/router.dart';
+import 'package:midjourney_client_ui/src/feature/feed/data/messages_repository.dart';
+import 'package:midjourney_client_ui/src/feature/feed/data/midjourney_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Dependencies container
@@ -8,6 +12,18 @@ abstract interface class Dependencies {
 
   /// App router
   abstract final AppRouter router;
+
+  /// Midjourney client
+  abstract final Midjourney midjourneyClient;
+
+  /// Midjourney Repository
+  abstract final MidjourneyRepository midjourneyRepository;
+
+  /// Database
+  abstract final AppDatabase database;
+
+  /// Messages Repository
+  abstract final MessagesRepository messagesRepository;
 
   /// Freeze dependencies, so they cannot be modified
   Dependencies freeze();
@@ -26,9 +42,25 @@ final class Dependencies$Mutable implements Dependencies {
   late AppRouter router;
 
   @override
+  late Midjourney midjourneyClient;
+
+  @override
+  late MidjourneyRepository midjourneyRepository;
+
+  @override
+  late AppDatabase database;
+
+  @override
+  late MessagesRepository messagesRepository;
+
+  @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         router: router,
+        database: database,
+        midjourneyClient: midjourneyClient,
+        midjourneyRepository: midjourneyRepository,
+        messagesRepository: messagesRepository,
       );
 }
 
@@ -39,6 +71,10 @@ final class _Dependencies$Immutable implements Dependencies {
   const _Dependencies$Immutable({
     required this.sharedPreferences,
     required this.router,
+    required this.database,
+    required this.midjourneyClient,
+    required this.midjourneyRepository,
+    required this.messagesRepository,
   });
 
   @override
@@ -46,6 +82,18 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final AppRouter router;
+
+  @override
+  final Midjourney midjourneyClient;
+
+  @override
+  final AppDatabase database;
+
+  @override
+  final MidjourneyRepository midjourneyRepository;
+
+  @override
+  final MessagesRepository messagesRepository;
 
   @override
   Dependencies freeze() => this;

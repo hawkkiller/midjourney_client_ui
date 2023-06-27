@@ -1,10 +1,16 @@
 {
-  "appTitle": "midjourney_client_ui",
+  "appTitle": "Midjourney Client UI",
   "@appTitle": {
     "description": "The title of the application"
   },
-  "samplePlaceholder": "Sample placeholder {value}",
-  "@samplePlaceholder": {
-    "description": "Sample placeholder"
-  }
+  "send_prompt": "Send a prompt",
+  "submit": "Submit",
+  "no_messages": "Try to send a prompt to generate image!",
+  "settings": "Settings",
+  "developer": "Developer",
+  "reset_db": "Reset DB",
+  "reset_db_description": "Reset the database to its initial state",
+  "reset_db_confirm": "Are you sure you want to reset the database?",
+  "reset": "Reset",
+  "cancel": "Cancel"
 }
