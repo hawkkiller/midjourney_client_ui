@@ -28,12 +28,14 @@ mixin InitializationSteps {
         channelId: progress.environmentStore.midjourneyChannelId,
         token: progress.environmentStore.midjourneyToken,
         loggerLevel: kDebugMode ? MLoggerLevel.debug : MLoggerLevel.info,
+        baseUrl: 'https://proxy.lazebny.io/discord/',
+        wsUrl: 'wss://proxy.lazebny.io/discord-ws/',
       );
       await midjourney.init();
       progress.dependencies.midjourneyClient = midjourney;
     },
-    'Database': (progress) {
-      final database = openConnection('midjourney_client_ui');
+    'Database': (progress) async {
+      final database = await openConnection('midjourney_client_ui');
       progress.dependencies.database = database;
     },
     'Midjourney Repository': (progress) async {
