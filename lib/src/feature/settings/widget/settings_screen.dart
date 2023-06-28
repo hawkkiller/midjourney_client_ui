@@ -18,6 +18,21 @@ class SettingsScreen extends StatelessWidget {
             SliverList.list(
               children: [
                 SettingsCategory(
+                  category: context.stringOf().discord,
+                ),
+                ListTile(
+                  leading: const Icon(Icons.token),
+                  title: Text(context.stringOf().discord_token),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.keyboard),
+                  title: Text(context.stringOf().discord_channel_id),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.discord),
+                  title: Text(context.stringOf().discord_server_id),
+                ),
+                SettingsCategory(
                   category: context.stringOf().developer,
                 ),
                 ListTile(
