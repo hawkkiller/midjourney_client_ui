@@ -62,7 +62,7 @@ dependencies:
   bloc_concurrency: 0.2.2
   path: ^1.8.3
   path_provider: ^2.0.15
-  midjourney_client: ^0.3.2-dev.7
+  midjourney_client: ^0.3.3-alpha
 
   # Local packages
   database:

@@ -1,8 +1,8 @@
 import 'package:database/database.dart';
-import 'package:midjourney_client/midjourney_client.dart';
 import 'package:midjourney_client_ui/src/core/router/router.dart';
 import 'package:midjourney_client_ui/src/feature/feed/data/messages_repository.dart';
 import 'package:midjourney_client_ui/src/feature/feed/data/midjourney_repository.dart';
+import 'package:midjourney_client_ui/src/feature/settings/data/settings_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Dependencies container
@@ -13,9 +13,6 @@ abstract interface class Dependencies {
   /// App router
   abstract final AppRouter router;
 
-  /// Midjourney client
-  abstract final Midjourney midjourneyClient;
-
   /// Midjourney Repository
   abstract final MidjourneyRepository midjourneyRepository;
 
@@ -24,6 +21,9 @@ abstract interface class Dependencies {
 
   /// Messages Repository
   abstract final MessagesRepository messagesRepository;
+
+  /// Settings Repository
+  abstract final SettingsRepository settingsRepository;
 
   /// Freeze dependencies, so they cannot be modified
   Dependencies freeze();
@@ -42,9 +42,6 @@ final class Dependencies$Mutable implements Dependencies {
   late AppRouter router;
 
   @override
-  late Midjourney midjourneyClient;
-
-  @override
   late MidjourneyRepository midjourneyRepository;
 
   @override
@@ -54,13 +51,16 @@ final class Dependencies$Mutable implements Dependencies {
   late MessagesRepository messagesRepository;
 
   @override
+  late SettingsRepository settingsRepository;
+
+  @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         router: router,
         database: database,
-        midjourneyClient: midjourneyClient,
         midjourneyRepository: midjourneyRepository,
         messagesRepository: messagesRepository,
+        settingsRepository: settingsRepository,
       );
 }
 
@@ -72,9 +72,9 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.sharedPreferences,
     required this.router,
     required this.database,
-    required this.midjourneyClient,
     required this.midjourneyRepository,
     required this.messagesRepository,
+    required this.settingsRepository,
   });
 
   @override
@@ -84,9 +84,6 @@ final class _Dependencies$Immutable implements Dependencies {
   final AppRouter router;
 
   @override
-  final Midjourney midjourneyClient;
-
-  @override
   final AppDatabase database;
 
   @override
@@ -94,6 +91,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final MessagesRepository messagesRepository;
+
+  @override
+  final SettingsRepository settingsRepository;
 
   @override
   Dependencies freeze() => this;

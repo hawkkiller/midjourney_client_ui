@@ -8,13 +8,13 @@ abstract class EnvironmentStore {
   abstract final String sentryDsn;
 
   /// Midjourney token
-  abstract final String midjourneyToken;
+  abstract final String? midjourneyToken;
 
   /// Midjourney channel ID
-  abstract final String midjourneyChannelId;
+  abstract final String? midjourneyChannelId;
 
   /// Midjourney server ID
-  abstract final String midjourneyServerId;
+  abstract final String? midjourneyServerId;
 
   /// Whether the environment is production
   bool get isProduction => environment == Environment.prod;
@@ -31,22 +31,20 @@ class EnvironmentStore$Impl extends EnvironmentStore {
   Environment get environment => _env;
 
   @override
-  String get sentryDsn => const String.fromEnvironment(
-        'SENTRY_DSN',
-      );
+  String get sentryDsn => const String.fromEnvironment('SENTRY_DSN');
 
   @override
-  String get midjourneyToken => const String.fromEnvironment(
-        'MIDJOURNEY_TOKEN',
-      );
+  String? get midjourneyToken => const bool.hasEnvironment('MIDJOURNEY_TOKEN')
+      ? const String.fromEnvironment('MIDJOURNEY_TOKEN')
+      : null;
 
   @override
-  String get midjourneyChannelId => const String.fromEnvironment(
-        'MIDJOURNEY_CHANNEL_ID',
-      );
+  String? get midjourneyChannelId => const bool.hasEnvironment('MIDJOURNEY_CHANNEL_ID')
+      ? const String.fromEnvironment('MIDJOURNEY_CHANNEL_ID')
+      : null;
 
   @override
-  String get midjourneyServerId => const String.fromEnvironment(
-        'MIDJOURNEY_SERVER_ID',
-      );
+  String? get midjourneyServerId => const bool.hasEnvironment('MIDJOURNEY_SERVER_ID')
+      ? const String.fromEnvironment('MIDJOURNEY_SERVER_ID')
+      : null;
 }
