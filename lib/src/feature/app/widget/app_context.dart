@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:midjourney_client_ui/src/core/localization/app_localization.dart';
 import 'package:midjourney_client_ui/src/core/theme/color_schemes.dart';
+import 'package:midjourney_client_ui/src/feature/feed/bloc/midjourney_connection_bloc.dart';
 import 'package:midjourney_client_ui/src/feature/initialization/widget/dependencies_scope.dart';
+import 'package:midjourney_client_ui/src/feature/settings/widget/settings_scope.dart';
 
 /// A widget which is responsible for providing the app context.
 class AppContext extends StatelessWidget {
@@ -18,6 +21,14 @@ class AppContext extends StatelessWidget {
       darkTheme: darkThemeData,
       locale: const Locale('en'),
       debugShowCheckedModeBanner: false,
+      builder: (context, child) => BlocProvider(
+        create: (context) => MidjourneyConnectionBloc(
+          DependenciesScope.of(context).midjourneyRepository,
+        ),
+        child: SettingsScope(
+          child: child!,
+        ),
+      ),
     );
   }
 }

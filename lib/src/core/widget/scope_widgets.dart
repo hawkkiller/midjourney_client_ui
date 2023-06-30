@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:midjourney_client_ui/src/core/utils/mixin/scope_mixin.dart';
 
-typedef BuildScope<T extends Widget> = ScopeMixin<T> Function(Widget child);
+typedef BuildScope<T extends Widget> = Widget Function(Widget child);
 
 typedef BuildWidget = Widget Function(BuildContext context, Widget? child);
 

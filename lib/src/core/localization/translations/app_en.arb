@@ -11,6 +11,13 @@
   "reset_db": "Reset DB",
   "reset_db_description": "Reset the database to its initial state",
   "reset_db_confirm": "Are you sure you want to reset the database?",
+  "reset_db_success": "Database reset successfully!",
+  "reset_db_error": "Error resetting database",
   "reset": "Reset",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "midjourney": "Midjourney",
+  "discord": "Discord",
+  "discord_token": "Discord Token",
+  "discord_server_id": "Discord Server ID",
+  "discord_channel_id": "Discord Channel ID"
 }

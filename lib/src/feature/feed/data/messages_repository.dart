@@ -7,7 +7,7 @@ abstract interface class MessagesRepository {
   Future<void> createOrUpdate(ImageMessage message);
 
   /// Resets the database
-  Future<void> resetDb();
+  Future<void> resetData();
 
   /// List of messages
   abstract final Stream<List<ImageMessage>> messages;
@@ -19,7 +19,7 @@ final class MessagesRepositoryImpl implements MessagesRepository {
   final MessagesDataProvider _messagesDataProvider;
 
   @override
-  Future<void> resetDb() => _messagesDataProvider.resetDb();
+  Future<void> resetData() => _messagesDataProvider.resetDb();
 
   @override
   Future<void> createOrUpdate(ImageMessage message) =>
