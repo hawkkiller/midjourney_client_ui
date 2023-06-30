@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:midjourney_client_ui/src/core/utils/extensions/context_extension.dart';
 import 'package:midjourney_client_ui/src/core/utils/mixin/scope_mixin.dart';
+import 'package:midjourney_client_ui/src/feature/feed/bloc/midjourney_connection_bloc.dart';
 import 'package:midjourney_client_ui/src/feature/initialization/widget/dependencies_scope.dart';
-import 'package:midjourney_client_ui/src/feature/settings/bloc/reset_database_bloc.dart';
+import 'package:midjourney_client_ui/src/feature/settings/bloc/database_bloc.dart';
 import 'package:midjourney_client_ui/src/feature/settings/bloc/settings_bloc.dart';
 import 'package:midjourney_client_ui/src/feature/settings/model/user_settings.dart';
 
@@ -54,6 +55,7 @@ class _SettingsScopeState extends State<SettingsScope> implements SettingsContro
     _databaseBloc = DatabaseBloc(
       DependenciesScope.of(context).messagesRepository,
     );
+    _initMidjourney(_settingsBloc.state.settings);
   }
 
   @override
@@ -73,6 +75,17 @@ class _SettingsScopeState extends State<SettingsScope> implements SettingsContro
         ),
       );
 
+  void _initMidjourney(UserSettings settings) {
+    if (settings.channelId.isEmpty || settings.serverId.isEmpty || settings.token.isEmpty) return;
+    context.read<MidjourneyConnectionBloc>().add(
+          MidjourneyConnectionEvent.connect(
+            token: settings.token,
+            serverId: settings.serverId,
+            channelId: settings.channelId,
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) => BlocListener<DatabaseBloc, DatabaseState>(
         bloc: _databaseBloc,
@@ -89,7 +102,13 @@ class _SettingsScopeState extends State<SettingsScope> implements SettingsContro
         },
         child: BlocConsumer<SettingsBloc, SettingsState>(
           bloc: _settingsBloc,
-          listener: (context, state) {},
+          listenWhen: (previous, current) =>
+              previous.settings.serverId != current.settings.serverId ||
+              previous.settings.channelId != current.settings.channelId ||
+              previous.settings.token != current.settings.token,
+          listener: (context, state) {
+            _initMidjourney(state.settings);
+          },
           builder: (context, state) => _InheritedSettings(
             state: state,
             controller: this,

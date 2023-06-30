@@ -34,17 +34,17 @@ class EnvironmentStore$Impl extends EnvironmentStore {
   String get sentryDsn => const String.fromEnvironment('SENTRY_DSN');
 
   @override
-  String? get midjourneyToken => const bool.hasEnvironment('MIDJOURNEY_TOKEN')
-      ? const String.fromEnvironment('MIDJOURNEY_TOKEN')
+  String? get midjourneyToken => const bool.hasEnvironment('DISCORD_TOKEN')
+      ? const String.fromEnvironment('DISCORD_TOKEN')
       : null;
 
   @override
-  String? get midjourneyChannelId => const bool.hasEnvironment('MIDJOURNEY_CHANNEL_ID')
-      ? const String.fromEnvironment('MIDJOURNEY_CHANNEL_ID')
+  String? get midjourneyChannelId => const bool.hasEnvironment('DISCORD_CHANNEL_ID')
+      ? const String.fromEnvironment('DISCORD_CHANNEL_ID')
       : null;
 
   @override
-  String? get midjourneyServerId => const bool.hasEnvironment('MIDJOURNEY_SERVER_ID')
-      ? const String.fromEnvironment('MIDJOURNEY_SERVER_ID')
+  String? get midjourneyServerId => const bool.hasEnvironment('DISCORD_SERVER_ID')
+      ? const String.fromEnvironment('DISCORD_SERVER_ID')
       : null;
 }

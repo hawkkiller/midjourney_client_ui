@@ -11,6 +11,12 @@ abstract interface class MidjourneyRepository {
   /// Stream of messages being imagined, upscaled, etc.
   abstract final Stream<ImageMessage> messages;
 
+  Future<void> initialize({
+    required String token,
+    required String serverId,
+    required String channelId,
+  });
+
   /// Imagine a prompt.
   Future<void> imagine(String prompt);
 
@@ -24,7 +30,7 @@ abstract interface class MidjourneyRepository {
 final class MidjourneyRepositoryImpl implements MidjourneyRepository {
   MidjourneyRepositoryImpl({
     required Midjourney midjourneyClient,
-  })  : _midjourneyClient = midjourneyClient;
+  }) : _midjourneyClient = midjourneyClient;
 
   final Midjourney _midjourneyClient;
 
@@ -34,6 +40,22 @@ final class MidjourneyRepositoryImpl implements MidjourneyRepository {
   static const _encoder = ImageMessageEncoder();
 
   final _controller = StreamController<ImageMessage>.broadcast(sync: true);
+
+  @override
+  Future<void> initialize({
+    required String token,
+    required String serverId,
+    required String channelId,
+  }) async {
+    await _midjourneyClient.initialize(
+      token: token,
+      serverId: serverId,
+      channelId: channelId,
+      baseUrl: 'https://proxy.lazebny.io/discord/',
+      wsUrl: 'wss://proxy.lazebny.io/discord-ws/',
+      cdnUrl: 'https://proxy.lazebny.io/discord-cdn/',
+    );
+  }
 
   @override
   Stream<ImageMessage> get messages => _controller.stream;
